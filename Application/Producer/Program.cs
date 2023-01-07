@@ -15,7 +15,7 @@ Console.Clear();
 
 var username = getUserName.Read();
 
-using var publisher = new Publisher("hello-world");
+using var publisher = new Publisher(Queues.HelloWorld);
 
 while (true)
 {
