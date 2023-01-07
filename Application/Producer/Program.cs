@@ -3,13 +3,19 @@ using Producer;
 
 var getUserName = new ReadFromCommandLine
 {
-    EmptyErrorMessage = "please, enter you username",
-    InputDisplayMessage = "username: "
+    EmptyErrorMessage = "please, enter your username",
+    InputDisplayMessage = @"==== WELCOME ====
+
+please, enter an username.
+
+username: "
 };
+
+Console.Clear();
 
 var username = getUserName.Read();
 
-using var sender = new Sender("hello-world");
+using var publisher = new Publisher("hello-world");
 
 while (true)
 {
@@ -18,16 +24,18 @@ while (true)
     var getMessage = new ReadFromCommandLine
     {
         EmptyErrorMessage = "please, enter your message",
-        InputDisplayMessage = "message: "
+        InputDisplayMessage = @$"==== PUBLISH A MESSAGE ====
+
+@{username}: "
     };
 
     var message = getMessage.Read();
 
-    Console.WriteLine("\n- SENDING by [{0}]: {1}", username, message);
+    Console.WriteLine($"\n- SENDING by [{username}]: {message}");
 
     var data = new Data(username, message);
     
-    sender.Send(data);
+    publisher.Publish(data);
 
     Console.WriteLine("\n- Message sent. press [enter] to continue...\n");
     Console.ReadKey();

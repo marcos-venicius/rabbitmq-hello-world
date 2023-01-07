@@ -7,11 +7,9 @@ public sealed class ReadFromCommandLine
     
     public string Read()
     {
-        Console.Clear();
-        
         while (true)
         {
-            Console.Write("\n{0}", InputDisplayMessage);
+            Console.Write($"\n{InputDisplayMessage}");
             
             var input = Console.ReadLine();
 
@@ -19,7 +17,7 @@ public sealed class ReadFromCommandLine
                 return input;
             
             Console.Clear();
-            Console.WriteLine("\n{0}", EmptyErrorMessage);
+            Console.WriteLine($"\n{EmptyErrorMessage}");
         }
     }
 }
