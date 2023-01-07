@@ -1,4 +1,4 @@
-namespace Producer;
+namespace Commons;
 
 public sealed class ReadFromCommandLine
 {
