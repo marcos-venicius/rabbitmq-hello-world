@@ -32,11 +32,10 @@ public sealed class Subscriber : IDisposable
 
     public void Listen()
     {
-        _channel.QueueDeclare(
+        _channel.QueueBind(
             queue: _queueName,
-            durable: false,
-            exclusive: false,
-            autoDelete: false,
+            exchange: Exchanges.Messages,
+            routingKey: RoutingKeys.Logs,
             arguments: null
         );
 
@@ -47,13 +46,29 @@ public sealed class Subscriber : IDisposable
             var bytes = eventArgs.Body.ToArray();
             
             var decodedData = DataEncoder.Decode(bytes);
-            
-            OnReceived?.Invoke(decodedData);
+
+            try
+            {
+                OnReceived?.Invoke(decodedData);
+                
+                _channel.BasicAck(
+                    eventArgs.DeliveryTag,
+                    false
+                );
+            }
+            catch
+            {
+                _channel.BasicNack(
+                    eventArgs.DeliveryTag,
+                    false,
+                    true
+                );
+            }
         };
         
         _channel.BasicConsume(
             queue: _queueName,
-            autoAck: true,
+            autoAck: false,
             consumer: consumer
         );
     }

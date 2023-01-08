@@ -28,21 +28,27 @@ public sealed class Publisher : IDisposable
 
     public void Publish(Data data)
     {
-        // create queue if not exists
+        _channel.ExchangeDeclare(
+            Exchanges.Messages,
+            type: "direct",
+            durable: true,
+            autoDelete: false,
+            arguments: null
+        );
+        
         _channel.QueueDeclare(
             queue: _queueName,
-            durable: false,
+            durable: true,
             exclusive: false,
             autoDelete: false,
             arguments: null
         );
-
+        
         var body = DataEncoder.Encode(data);
         
-        // publish data
         _channel.BasicPublish(
-            exchange: "",
-            routingKey: _queueName,
+            exchange: Exchanges.Messages,
+            routingKey: RoutingKeys.Logs,
             basicProperties: null,
             body: body
         );
